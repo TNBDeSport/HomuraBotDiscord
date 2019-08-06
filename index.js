@@ -80,29 +80,38 @@ client.on("guildMemberAdd", async member => {
   .setDescription(`Bienvenue, ${member} sur ${member.guild.name}`)
   welcomechannel.send(welcomeembed);
 });
-/*client.on("guildBotAdd", async client => {
-  
-  let botaddchannel = client.guild.channels.find("id", "559125047395090432")
-   
-  let botaddembed = new Discord.RichEmbed()
-  .setColor("RANDOM")
-  .addField("Nom du serveur", client.guild.name)
-  .addField("ID du serveur", client.guild.id)
-  .addField("ID du fonda", `<@${client.guild.ownerID}>`)
-  botaddchannel.send(botaddembed);
-  
-});*/
 
-  //Discord Bot List 
+bot.on("guildCreate", async guild => {
+    let channels = guild.channels;
+    var BreakException = {};
 
-/* dbl.on('posted', () => {
-  console.log('Server count posted!');
+    try {
+        channels.forEach(function(element) {
+            if(element.type === "text") {
+                let channel = client.channels.get(element.id);
+                channel.createInvite({
+                    maxAge: 0
+                }).then(invite => {
+                    const embed = new Discord.RichEmbed()
+                        .setColor('#3333cc')
+                        .setAuthor('~ Nouveau Serveur ~', guild.iconURL)
+                        .addField('ID :', `${guild.id}`, true)
+                        .addField('Nom :', `${guild.name}`, true)
+                        .addField('Créateur :', `<@!${guild.owner.id}>`, true)
+                        .addField('\u200B', '\u200B', true)
+                        .addField('Membres :', `${guild.memberCount}`, true)
+                        .addField('Invitation', `${invite.url}`, true)
+                        .setTimestamp();
+                    client.channels.get("559125047395090432").send(embed)
+                });
+                throw BreakException;
+            }
+        });
+    } catch (e) {
+        if (e !== BreakException) throw e;
+    }
 });
 
-dbl.on('error', e => {
- console.log(`Oops! ${e}`);
-});
-*/
 client.on('error', e => {
   console.log(chalk.bgRed(e.replace(regToken, 'that was redacted')));
 });
